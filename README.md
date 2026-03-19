@@ -48,3 +48,25 @@ User Query → Vector Search (FAISS) → Context Retrieval → Gemini LLM → An
 ```bash
 git clone https://github.com/jubin5/hybrid-rag-personal-assistant.git
 cd hybrid-rag-personal-assistant
+
+
+pip install -r requirements.txt
+
+genai.configure(api_key="YOUR_GEMINI_API_KEY")
+
+python app.py
+
+
+---
+
+# 🚀 🔹 6. Upload to GitHub
+
+### Run these commands:
+
+```bash
+git init
+git add .
+git commit -m "Initial commit - Hybrid RAG chatbot"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/hybrid-rag-personal-assistant.git
+git push -u origin main
