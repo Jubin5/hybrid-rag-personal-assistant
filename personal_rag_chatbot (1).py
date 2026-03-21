@@ -9,24 +9,20 @@ Original file is located at
 
 !pip uninstall -y numpy
 !pip install numpy==1.26.4 --force-reinstall
-
 !pip install -q \
 langchain==0.2.14 \
 langchain-core==0.2.32 \
 langchain-community==0.2.12 \
 faiss-cpu \
 pypdf
-
 !pip install -U langchain-huggingface sentence-transformers
-
 !pip install google-genai
 
 import os
 import google.genai as genai
 
-# The 'configure' method is not directly available on the 'google.generativeai' module.
 # The recommended way to set the API key is via an environment variable.
-os.environ["GOOGLE_API_KEY"] = "AIzaSyAzY3f3mdf0rYgPr2tyDN7z-TaXYmSbRAk"
+os.environ["GOOGLE_API_KEY"] = "YOUR_GOOGLE_API_KEY"
 
 from google.colab import files
 uploaded = files.upload()
@@ -35,16 +31,16 @@ from langchain_community.document_loaders import PyPDFLoader, TextLoader
 
 documents = []
 
-documents.extend(PyPDFLoader("Jubin_Full_Resume.pdf").load())
-documents.extend(TextLoader("projects.txt").load())
+documents.extend(PyPDFLoader("YOUR_RESUME.pdf").load())
+documents.extend(TextLoader("YOUR_PROJECTS.txt").load())
 
 print("Loaded docs:", len(documents))
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 splitter = RecursiveCharacterTextSplitter(
-    chunk_size=500,
-    chunk_overlap=250
+    chunk_size=800,
+    chunk_overlap=400
 )
 
 docs = splitter.split_documents(documents)
@@ -67,7 +63,7 @@ from google import genai
 from google.genai import types  # ← import this for GenerateContentConfig
 
 # Client creation (do this once, outside the function)
-client = genai.Client(api_key="AIzaSyDE7aT-H9B2465oKbIR8ExHxcnMlv3ZFHE")  # or env var
+client = genai.Client(api_key="YOUR_GOOGLE_API")  
 
 def ask_rag(query: str) -> str:
     docs = vectorstore.similarity_search(query, k=10)
@@ -93,11 +89,11 @@ Question:
 
     # Use 'config' instead of 'generation_config'
     response = client.models.generate_content(
-        model="gemini-2.5-flash",  # or "gemini-2.5-pro", "gemini-flash-latest"
+        model="gemini-2.5-flash",  
         contents=prompt,
 
-        config=types.GenerateContentConfig(   # ← this is the correct argument name
-            temperature=0.8,                  # low for factual RAG
+        config=types.GenerateContentConfig(  
+            temperature=0.8,                  
             max_output_tokens=400,
             top_p=0.95,
             tools=[types.Tool(google_search=types.GoogleSearch())],
